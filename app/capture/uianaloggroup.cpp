@@ -240,7 +240,7 @@ void UiAnalogGroup::doLayout()
 
 	/* Note: Assume that label and level use same font. */
 	QFontMetrics fm(mMeasureLevelLbl[0]->font());
-	int wLabel = fm.width("|A5-A6|:");
+    int wLabel = fm.horizontalAdvance("|A5-A6|:");
 	int wValueMax = 0;
 	//
 	//    make sure all labels are resized to their minimum size
@@ -252,7 +252,7 @@ void UiAnalogGroup::doLayout()
 		QLabel *level = mMeasureLevel[i];
 		QString text;
 		text = (level ? level->text() : "W");
-		int wValue = fm.width(text);
+        int wValue = fm.horizontalAdvance(text);
 		if (label)
 			(label->resize(wLabel, fm.height()));
 		if (level)
@@ -262,7 +262,7 @@ void UiAnalogGroup::doLayout()
 		label = mMeasurePkLbl[i];
 		level = mMeasurePk[i];
 		text = (level ? level->text() : "W");
-		wValue = fm.width(text);
+        wValue = fm.horizontalAdvance(text);
 
 		if (label)
 			(label->resize(wLabel, fm.height()));
@@ -276,7 +276,7 @@ void UiAnalogGroup::doLayout()
 			label = mMeasureLevelDiffLbl[i / 2];
 			level = mMeasureLevelDiff[i / 2];
 			text = (level ? level->text() : "W");
-			wValue = fm.width(text);
+            wValue = fm.horizontalAdvance(text);
 			if (label)
 				(label->resize(wLabel, fm.height()));
 			if (level)
@@ -299,7 +299,7 @@ void UiAnalogGroup::doLayout()
 		QLabel *level = mMeasureLevel[i];
 		QString text;
 		text = (level ? level->text() : "W");
-		int wValue = fm.width(text);
+        int wValue = fm.horizontalAdvance(text);
 
 		if (label)
 			(label->move(xPos, yPos));
@@ -321,7 +321,7 @@ void UiAnalogGroup::doLayout()
 			QString text;
 
 			text = (level ? level->text() : "W");
-			int wValue = fm.width(text);
+            int wValue = fm.horizontalAdvance(text);
 
 			if (label)
 				(label->move(xPos, yPos));
@@ -341,7 +341,7 @@ void UiAnalogGroup::doLayout()
 		QLabel *level = mMeasurePk[i];
 		QString text;
 		text = (level ? level->text() : "W");
-		int wValue = fm.width(text);
+        int wValue = fm.horizontalAdvance(text);
 
 		if (label)
 			(label->move(xPos, yPos));

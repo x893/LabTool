@@ -18,6 +18,7 @@
 #include <QDebug>
 
 #include <QtGlobal>
+#include <QRandomGenerator>
 #include <qmath.h>
 
 #include "generator/i2cgenerator.h"
@@ -332,13 +333,13 @@ void SimulatorCaptureDevice::generateRandomDigitalSignals()
 		//    deleteSignalData() which is called by destructor or
 		//    clearSignalData()
 		QVector<int> *s = new QVector<int>();
-		bool fast = ((qrand() % 2) == 1);
+        bool fast = (QRandomGenerator::global()->bounded(2) == 1);
 
 		if (fast)
 		{
 			for (int j = 0; j < maxNumSamples; ++j)
 			{
-				s->append(qrand() % 2);
+                s->append(QRandomGenerator::global()->bounded(2) % 2);
 			}
 		}
 		else
@@ -346,9 +347,9 @@ void SimulatorCaptureDevice::generateRandomDigitalSignals()
 
 			for (int j = 0; j < maxNumSamples;)
 			{
-				int level = qrand() % 2;
-				int parts = (qrand() % 1020) + 4;
-				int duration = qrand() % (maxNumSamples / parts);
+                int level = QRandomGenerator::global()->bounded(2);
+                int parts = QRandomGenerator::global()->bounded(1020) + 4;
+                int duration = QRandomGenerator::global()->bounded(maxNumSamples / parts);
 				duration = j + duration;
 				if (duration > maxNumSamples)
 				{
@@ -361,11 +362,7 @@ void SimulatorCaptureDevice::generateRandomDigitalSignals()
 					j++;
 				}
 			}
-		}
-
-		int skips = qrand() % 5478;
-		for (int j = 0; j < skips; j++)
-			qrand();
+        }
 
 		if (mDigitalSignals[id] != NULL)
 		{
@@ -589,16 +586,16 @@ void SimulatorCaptureDevice::generateRandomAnalogSignals()
 		{
 
 			// random number between -5.0 and +5.0
-			double val = qrand() % 1000;
+            double val = QRandomGenerator::global()->bounded(1000);
 			val -= 500;
 			val /= 100.0;
 
 			s->append(val);
 		}
 
-		int skips = qrand() % 5478;
+        int skips = QRandomGenerator::global()->bounded(5478);
 		for (int j = 0; j < skips; j++)
-			qrand();
+            QRandomGenerator::global()->bounded(100);
 
 		if (mAnalogSignals[id] != NULL)
 		{
@@ -630,11 +627,11 @@ void SimulatorCaptureDevice::generateSineAnalogSignals()
 		//    clearSignalData()
 		QVector<double> *s = new QVector<double>();
 
-		double amp = qrand() % 1000;
+        double amp = QRandomGenerator::global()->bounded(1000);
 		amp -= 500;
 		amp /= 100.0;
 
-		int per = (qrand() % (maxNumSamples / 32));
+        int per = QRandomGenerator::global()->bounded(maxNumSamples / 32);
 
 		for (int j = 0; j < maxNumSamples; j++)
 		{

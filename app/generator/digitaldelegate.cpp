@@ -169,13 +169,13 @@ QSize DigitalDelegate::sizeHint(const QStyleOptionViewItem &option,
 		if (index.column() == 0)
 		{
 			QString name = signal->name();
-			sz.setWidth(option.fontMetrics.width(name) + 22);
+            sz.setWidth(option.fontMetrics.horizontalAdvance(name) + 22);
 			sz.setHeight(option.fontMetrics.height() + 2);
 		}
 
 		else
 		{
-			sz.setWidth(option.fontMetrics.width('0') + 2);
+            sz.setWidth(option.fontMetrics.horizontalAdvance('0') + 2);
 			sz.setHeight(option.fontMetrics.height() + 8);
 		}
 

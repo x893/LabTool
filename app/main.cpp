@@ -25,14 +25,9 @@
 #include "uimainwindow.h"
 
 #ifdef QT_NO_DEBUG
-#if QT_VERSION >= 0x050000
 void logOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
 	(void)context;
-#else
-void logOutput(QtMsgType type, const char *msg)
-{
-#endif
 
 	QString outMsg = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss");
 
@@ -62,11 +57,7 @@ void logOutput(QtMsgType type, const char *msg)
 	//            + QCoreApplication::applicationName()
 	//            + ".log";
 	QString logFilename =
-#if QT_VERSION >= 0x050000
-		QStandardPaths::writableLocation(QStandardPaths::DataLocation)
-#else
-		QDesktopServices::storageLocation(QDesktopServices::DataLocation)
-#endif
+        QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)
 		+ QDir::separator() + QCoreApplication::applicationName() + ".log";
 
 	QFile logFile(logFilename);
@@ -100,11 +91,7 @@ int main(int argc, char *argv[])
 
 #ifdef QT_NO_DEBUG
 
-#if QT_VERSION >= 0x050000
 	qInstallMessageHandler(logOutput);
-#else
-	qInstallMsgHandler(logOutput);
-#endif
 
 #endif // QT_NO_DEBUG
 

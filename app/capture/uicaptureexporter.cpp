@@ -227,7 +227,13 @@ void UiCaptureExporter::exportToCsv(QWidget *w)
 			break;
 
 		QFile file(filePath);
-		file.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text);
+        if (!file.open(QIODevice::Truncate | QIODevice::WriteOnly | QIODevice::Text))
+        {
+            qWarning()  << "Can't open file:" << file.fileName()
+                        << file.errorString();
+            return;
+        }
+
 		QTextStream out(&file);
 
 		QChar delim = ',';

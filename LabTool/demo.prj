@@ -1,0 +1,35 @@
+[General]
+appState=0
+
+[device]
+name=Simulator
+
+[colorScheme]
+scheme=Dark
+
+[capture]
+sampleRate=100000000
+digitalTrigger=0
+signals\size=0
+cursors\1\meta="1;0.0015;0"
+cursors\2\meta="2;0.003;0"
+cursors\3\meta="3;0.0045;0"
+cursors\4\meta="4;0.006;0"
+cursors\size=4
+
+[digitalGenerator]
+enabled=false
+rate=1000000
+signals\1\meta="Digital;1;6;Digital 6;25;q/qqAQ=="
+signals\2\meta="Digital;1;7;Digital 7;25;ATAAAQ=="
+signals\size=2
+
+[analogGenerator]
+enabled=false
+signals\1\meta="Analog;1;0;Analog 0;0;10000;3"
+signals\2\meta="Analog;1;1;Analog 1;0;10000;3"
+signals\size=2
+
+[timeAxis]
+refTime=0.00013767600000000004
+majorStepTime=1.0000000000000002e-07

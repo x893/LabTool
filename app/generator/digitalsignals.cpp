@@ -208,9 +208,7 @@ QVariant DigitalSignals::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         DigitalSignal* s = list.at(index.row());
-
-
-        return qVariantFromValue<DigitalSignal*>(s);
+        return QVariant::fromValue(s);
     }
     else if (role == Qt::ToolTipRole && index.column() == 0) {
         return tr("Double-click to configure");

@@ -78,13 +78,13 @@ void UiAbstractSignal::paintBackground(QPainter *painter)
 
 	if (mSelected)
 	{
-		gradient.setColorAt(0, QColor::fromRgbF(0.9, 0.9, 1.0, 0.2));
+        gradient.setColorAt(0, QColor::fromRgbF(0.9f, 0.9f, 1.0f, 0.2f));
 		gradient.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0));
 	}
 	else
 	{
-		gradient.setColorAt(0, QColor::fromRgbF(0.9, 0.9, 0.9, 0.2));
-		gradient.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0));
+        gradient.setColorAt(0, QColor::fromRgbF(0.9f, 0.9f, 0.9f, 0.2f));
+        gradient.setColorAt(1, QColor::fromRgbF(0.0f, 0.0f, 0.0f, 0.0f));
 	}
 
 	QBrush brush(gradient);

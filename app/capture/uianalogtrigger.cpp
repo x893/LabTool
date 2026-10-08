@@ -57,7 +57,7 @@ UiAnalogTrigger::UiAnalogTrigger(QWidget *parent) : QWidget(parent)
 	// Deallocation: "Qt Object trees" (See UiMainWindow)
 	mLevelLbl = new QLabel("0", this);
 	QFontMetrics fm(mLevelLbl->font());
-	int level_width = fm.width("0") * 6;
+    int level_width = fm.horizontalAdvance("0") * 6;
 	if (level_width < 30)
 	{
 		level_width = 30;

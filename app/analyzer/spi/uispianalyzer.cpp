@@ -272,7 +272,7 @@ void UiSpiAnalyzer::analyze()
 	int miso = 0;
 	int mosiValue = 0;
 	int misoValue = 0;
-	int dataBitCnt = mDataBits;
+    unsigned dataBitCnt = mDataBits;
 
 	int startIdx = -1;
 
@@ -352,7 +352,11 @@ void UiSpiAnalyzer::analyze()
 					startIdx = pos;
 				}
 
-				mosiValue |= (mosi << (--dataBitCnt));
+                if (dataBitCnt > 0)
+                {
+                    --dataBitCnt;
+                    mosiValue |= (mosi << dataBitCnt);
+                }
 				misoValue |= (miso << (dataBitCnt));
 
 				// captured a complete value
@@ -600,8 +604,8 @@ void UiSpiAnalyzer::paintEvent(QPaintEvent *event)
 		typeAndValueAsString(item.type, item.misoValue, misoShortTxt,
 							 misoLongTxt);
 
-		int shortTextWidth = painter.fontMetrics().width(mosiShortTxt);
-		int longTextWidth = painter.fontMetrics().width(mosiLongTxt);
+        int shortTextWidth = painter.fontMetrics().horizontalAdvance(mosiShortTxt);
+        int longTextWidth = painter.fontMetrics().horizontalAdvance(mosiLongTxt);
 
 		from = mTimeAxis->timeToPixelRelativeRef((double)fromIdx / sampleRate);
 
@@ -688,12 +692,12 @@ void UiSpiAnalyzer::doLayout()
 	int y = r.top();
 
 	QFontMetrics fm(mIdLbl->font());
-	int wIdLbl = fm.width(mIdLbl->text());
+    int wIdLbl = fm.horizontalAdvance(mIdLbl->text());
 	mIdLbl->move(r.left(), y);
 	mIdLbl->resize(wIdLbl, fm.height());
 
 	int x = mIdLbl->pos().x() + wIdLbl + SignalIdMarginRight;
-	int wNameLbl = fm.width(mNameLbl->text());
+    int wNameLbl = fm.horizontalAdvance(mNameLbl->text());
 	mNameLbl->move(x, y);
 	mNameLbl->resize(wNameLbl, fm.height());
 	mEditName->move(x, y);
@@ -701,8 +705,8 @@ void UiSpiAnalyzer::doLayout()
 
 	fm = QFontMetrics(mMosiLbl->font());
 	int ySignalAssignment = r.bottom() - fm.height() * 2;
-	int wMosiLbl = fm.width(mMosiLbl->text());
-	int wSckLbl = fm.width(mSckLbl->text());
+    int wMosiLbl = fm.horizontalAdvance(mMosiLbl->text());
+    int wSckLbl = fm.horizontalAdvance(mSckLbl->text());
 	int wMosiSck = ((wMosiLbl >= wSckLbl) ? wMosiLbl : wSckLbl);
 	int xMosiSck = r.left() + wMosiSck + 5;
 
@@ -713,8 +717,8 @@ void UiSpiAnalyzer::doLayout()
 	mSckLbl->move(r.left(), ySignalAssignment);
 	mEnableLbl->move(xMosiSck, ySignalAssignment);
 
-	int wMisoLbl = fm.width(mMisoLbl->text());
-	int wEnableLbl = fm.width(mEnableLbl->text());
+    int wMisoLbl = fm.horizontalAdvance(mMisoLbl->text());
+    int wEnableLbl = fm.horizontalAdvance(mEnableLbl->text());
 	int wMisoEnable = ((wMisoLbl >= wEnableLbl) ? wMisoLbl : wEnableLbl);
 
 	mMosiLbl->resize(wMosiSck, fm.height());
@@ -775,8 +779,8 @@ void UiSpiAnalyzer::paintSignal(QPainter *painter, double from, double to,
 								int h, QString &shortTxt, QString &longTxt)
 {
 
-	int shortTextWidth = painter->fontMetrics().width(shortTxt);
-	int longTextWidth = painter->fontMetrics().width(longTxt);
+    int shortTextWidth = painter->fontMetrics().horizontalAdvance(shortTxt);
+    int longTextWidth = painter->fontMetrics().horizontalAdvance(longTxt);
 
 	if (to - from > 4)
 	{

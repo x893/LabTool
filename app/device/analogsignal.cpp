@@ -154,7 +154,7 @@ AnalogSignal::AnalogSignal(AnalogUsage usage, int id)
     Returns true if this analog signal and the given \a signal have the same
     contents; otherwise returns false.
 */
-bool AnalogSignal::operator==(const AnalogSignal &other)
+bool AnalogSignal::operator==(const AnalogSignal &other) const
 {
     return (mId == other.mId &&
             mName == other.mName &&

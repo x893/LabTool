@@ -16,7 +16,7 @@
 #include "stringutil.h"
 
 #include <QDebug>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 
 // match strings such as 1 hz, 1.123 kHz, 1000, 1,1444MHZ
@@ -175,14 +175,13 @@ QString StringUtil::frequencyToString(double freq)
 /*!
 	Checks if the specified \a freqStr contains a valid frequency value.
 */
-bool StringUtil::isFrequencyStringValid(QString &freqStr)
+bool StringUtil::isFrequencyStringValid(const QString &freqStr)
 {
-	QRegExp regExp;
-	regExp.setCaseSensitivity(Qt::CaseInsensitive);
-	regExp.setPattern(FrequencyRegExpPattern);
-
-	return regExp.exactMatch(freqStr);
-}
+    static const QRegularExpression regExp(
+        QRegularExpression::anchoredPattern(FrequencyRegExpPattern),
+        QRegularExpression::CaseInsensitiveOption
+        );
+    return regExp.match(freqStr).hasMatch();}
 
 /*!
 	Convert frequency in Hz to a string representation.
@@ -243,92 +242,94 @@ QString StringUtil::frequencyToString(int freqInHz)
 /*!
 	Convert to frequency in Hz from a string representation.
 */
-int StringUtil::frequencyToInt(QString &freqStr)
+int StringUtil::frequencyToInt(const QString &freqStr)
 {
-	int freq = -1;
-	int mult = 1;
-	int addDecDigits = 0;
-	bool ok;
+    int freq = -1;
+    int mult = 1;
+    int addDecDigits = 0;
+    bool ok;
 
-	do
-	{
+    static const QRegularExpression regExp(
+        FrequencyRegExpPattern,
+        QRegularExpression::CaseInsensitiveOption
+        );
 
-		if (!isFrequencyStringValid(freqStr))
-			break;
+    do
+    {
+        if (!isFrequencyStringValid(freqStr))
+            break;
 
-		// we are using a regular expression to divide the string into
-		// 1 - complete number
-		// 2 - only decimal part (including decimal character)
-		// 3 - unit (hz, khz, mhz)
+        // we are using a regular expression to divide the string into
+        // 1 - complete number
+        // 2 - only decimal part (including decimal character)
+        // 3 - unit (hz, khz, mhz)
 
-		QRegExp regExp;
-		regExp.setCaseSensitivity(Qt::CaseInsensitive);
-		regExp.setPattern(FrequencyRegExpPattern);
+        QRegularExpressionMatch match = regExp.match(freqStr);
+        if (!match.hasMatch())
+            break;
 
-		regExp.indexIn(freqStr);
+        QString numStr = match.captured(1);
+        QString decStr = match.captured(2);
 
-		QString numStr = regExp.cap(1);
-		QString decStr = regExp.cap(2);
+        if (!decStr.isEmpty())
+        {
+            // remove decimal part from number string
+            numStr = numStr.mid(0, numStr.indexOf(decStr));
 
-		if (!decStr.isEmpty())
-		{
-			// remove decimal part from number string
-			numStr = numStr.mid(0, numStr.indexOf(decStr));
+            // remove decimal character
+            decStr = decStr.mid(1);
+        }
 
-			// remove decimal character
-			decStr = decStr.mid(1);
-		}
+        // get multiplier
 
-		// get multiplier
+        QString multStr = match.captured(3).toLower();
+        if (multStr == "khz")
+        {
+            mult = 1000;
+            // 3 digits in the decimal part
+            addDecDigits = 3 - decStr.size();
+        }
+        else if (multStr == "mhz")
+        {
+            mult = 1000000;
+            // 6 digits in the decimal part
+            addDecDigits = 6 - decStr.size();
+        }
+        else
+        {
+            // no decimals accepted when freq specified in Hz
+            decStr = "0";
+        }
 
-		QString multStr = regExp.cap(3).toLower();
-		if (multStr == "khz")
-		{
-			mult = 1000;
-			// 3 digits in the decimal part
-			addDecDigits = 3 - decStr.size();
-		}
-		else if (multStr == "mhz")
-		{
-			mult = 1000000;
-			// 6 digits in the decimal part
-			addDecDigits = 6 - decStr.size();
-		}
-		else
-		{
-			// no decimals accepted when freq specified in Hz
-			decStr = "0";
-		}
+        // get integer part of value
 
-		// get integer part of value
+        int intVal = numStr.toInt(&ok);
+        if (!ok)
+            break;
+        // will overflow after multiplication -> break
+        if (mult > (INT_MAX / intVal))
+            break;
 
-		int intVal = numStr.toInt(&ok);
-		if (!ok)
-			break;
-		// will overflow after multiplication -> break
-		if (mult > (INT_MAX / intVal))
-			break;
+        intVal *= mult;
 
-		intVal *= mult;
+        // make sure the decimal part is 'large enough'. Fill with zeros if it
+        // is short. Trim if it is too long.
+        if (addDecDigits > 0)
+        {
+            decStr = decStr + QString("").fill('0', addDecDigits);
+        }
+        else if (addDecDigits < 0)
+        {
+            decStr = decStr.left(decStr.size() + addDecDigits);
+        }
 
-		// make sure the decimal part is 'large enough'. Fill with zeros if it
-		// is short. Trim if it is too long.
-		if (addDecDigits > 0)
-		{
-			decStr = decStr + QString("").fill('0', addDecDigits);
-		}
-		else if (addDecDigits < 0)
-		{
-			decStr = decStr.left(decStr.size() + addDecDigits);
-		}
+        int decVal = decStr.toInt(&ok);
+        if (!ok)
+            break;
 
-		int decVal = decStr.toInt(&ok);
-		if (!ok)
-			break;
+        freq = intVal + decVal;
 
-		freq = intVal + decVal;
+    } while (false);
 
-	} while (false);
-
-	return freq;
+    return freq;
 }

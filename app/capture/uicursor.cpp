@@ -359,7 +359,7 @@ void UiCursor::paintEvent(QPaintEvent *event)
 
 	if (!mMinWidthSet)
 	{
-		int textWidth = painter.fontMetrics().width(lbl);
+        int textWidth = painter.fontMetrics().horizontalAdvance(lbl);
 		setMinimumInfoWidth(10 + textWidth + 10);
 		mMinWidthSet = true;
 	}
@@ -447,7 +447,7 @@ void UiCursor::paintCursorSymbol(QPainter *painter, int cursorId)
 		{
 			cNum = QString("T");
 		}
-		int textWidth = painter->fontMetrics().width(cNum);
+        int textWidth = painter->fontMetrics().horizontalAdvance(cNum);
 		mCursorLabelWidth = qMax(mCursorLabelWidth, textWidth);
 
 		// is this the correct way to check the height of the painted character?

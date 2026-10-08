@@ -242,14 +242,13 @@ void UiPlot::resizeEvent(QResizeEvent *event)
 */
 void UiPlot::wheelEvent(QWheelEvent *event)
 {
-	int step = 1;
-	if (event->delta() < 0)
-	{
-		step = -1;
-	}
+    int step = 1;
+    if (event->angleDelta().y() < 0)
+    {
+        step = -1;
+    }
 
-	zoom(step, event->pos().x());
-}
+    zoom(step, event->position().x());}
 
 /*!
 	The mouse press event handler is called when a mouse button is pressed.
@@ -447,7 +446,7 @@ void UiPlot::dragMoveEvent(QDragMoveEvent *event)
 			if (fromIdx == -1)
 				break;
 
-			QWidget *childWidget = childAt(event->pos());
+            QWidget *childWidget = childAt(event->position().toPoint());
 			UiAbstractSignal *childSignal = qobject_cast<UiAbstractSignal *>(childWidget);
 
 			// continuing to move over same signal -> don't do anything

@@ -225,7 +225,7 @@ void UiSimpleAbstractSignal::setLightDark()
 	palette = mEditName->palette();
 	palette.setColor(QPalette::Text, cfg->textColor());
 	palette.setColor(QPalette::Base, cfg->plotBackgroundColor());
-	palette.setColor(QPalette::Background, cfg->plotBackgroundColor());
+    palette.setColor(QPalette::Window, cfg->plotBackgroundColor());
 	mEditName->setPalette(palette);
 	mConfigureBtn->setIcon(cfg->configureIcon());
 	mDisableBtn->setIcon(cfg->closeIcon());

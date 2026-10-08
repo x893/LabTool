@@ -32,6 +32,8 @@
 #include <QFile>
 #include <QStandardPaths>
 
+#include <QActionGroup>
+
 #include "common/configuration.h"
 #include "device/devicemanager.h"
 #include "capture/uianalogsignal.h"

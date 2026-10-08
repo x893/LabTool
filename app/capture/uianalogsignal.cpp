@@ -398,7 +398,7 @@ void UiAnalogSignalPrivate::setGeometry(int x, int y, int w, int h)
 
     mIdLbl->move(wx, wy);
     QFontMetrics fm(mIdLbl->font());
-    int widthId = fm.width("AW");
+    int widthId = fm.horizontalAdvance("AW");
     wx = mIdLbl->pos().x()+widthId
             + UiAnalogSignal::SignalIdMarginRight;
     mName->move(wx, wy);
@@ -407,7 +407,7 @@ void UiAnalogSignalPrivate::setGeometry(int x, int y, int w, int h)
     mAnalogTrigger->resize(mAnalogTrigger->width(), h-mDisableBtn->height()-4);
     wy = wy+(h-mDisableBtn->height())/2 - mAnalogTrigger->height()/2;
     int xAnalogTrigger = x+w-mAnalogTrigger->width();
-    int wName = fm.width(mName->text()) + widthId;
+    int wName = fm.horizontalAdvance(mName->text()) + widthId;
     int hIdLbl = fm.height() + 4;
     mAnalogTrigger->move(xAnalogTrigger, wy);
     mIdLbl->resize(widthId, hIdLbl);
@@ -418,7 +418,7 @@ void UiAnalogSignalPrivate::setGeometry(int x, int y, int w, int h)
     if (mEditName->isVisible()) {
         wy = mEditName->pos().y() + mEditName->height() + 7;
     }
-    int wVPerDiv = fm.width(mVPerDivBox->text()) + ((qMax(widthId, DcAcButtonStyleMinWidth) * 5 + 2) / 2) /* Approx Value */;
+    int wVPerDiv = fm.horizontalAdvance(mVPerDivBox->text()) + ((qMax(widthId, DcAcButtonStyleMinWidth) * 5 + 2) / 2) /* Approx Value */;
     mVPerDivBox->resize(wVPerDiv, fm.height() + 5);
     wx = w/2-mVPerDivBox->width()/2;
     mVPerDivBox->move(wx, wy);
@@ -426,7 +426,7 @@ void UiAnalogSignalPrivate::setGeometry(int x, int y, int w, int h)
     // signal color is painted below mVPerDivBox (see paintInfo)
     wy = mVPerDivBox->pos().y()+mVPerDivBox->height()+3+5+5;
 
-    int wDcBtn = DcAcButtonStyleMinWidth + fm.width("DC") + 4 /* Approx Value. */;
+    int wDcBtn = DcAcButtonStyleMinWidth + fm.horizontalAdvance("DC") + 4 /* Approx Value. */;
     int hDcBtn = qMax(DcAcButtonStyleMinHeight, fm.height());
     mDcBtn->resize(wDcBtn, hDcBtn);
     mAcBtn->resize(wDcBtn, hDcBtn);
@@ -453,7 +453,7 @@ void UiAnalogSignalPrivate::paintInfo(QPainter* painter, QColor color)
     int w = mVPerDivBox->width();
     int y = mVPerDivBox->pos().y()+mVPerDivBox->height()+3;
     QRect rect(geometry.width()/2-w/2, y, w, 5);
-    painter->drawRoundRect(rect, 10, 10);
+    painter->drawRoundedRect(rect, 10, 10);
 }
 
 void UiAnalogSignalPrivate::setLightDark()
@@ -465,7 +465,7 @@ void UiAnalogSignalPrivate::setLightDark()
     palette = mEditName->palette();
     palette.setColor(QPalette::Text, Configuration::instance().textColor());
     palette.setColor(QPalette::Base, Configuration::instance().plotBackgroundColor());
-    palette.setColor(QPalette::Background, Configuration::instance().plotBackgroundColor());
+    palette.setColor(QPalette::Window, Configuration::instance().plotBackgroundColor());
     mEditName->setPalette(palette);
     QString vper_div_style = QString(
         "QSpinBox::up-button {\n"
@@ -513,7 +513,7 @@ void UiAnalogSignalPrivate::setLightDark()
     );
     mVPerDivBox->setStyleSheet(vper_div_style);
     palette = mDcBtn->palette();
-    palette.setColor(QPalette::Foreground, Configuration::instance().textColor());
+    palette.setColor(QPalette::WindowText, Configuration::instance().textColor());
     mDcBtn->setPalette(palette);
     mAcBtn->setPalette(palette);
     mDcBtn->setFont(mIdLbl->font());
@@ -713,9 +713,6 @@ void UiAnalogSignal::paintEvent(QPaintEvent *event)
 {
     (void)event;
     QPainter painter(this);
-#if QT_VERSION >= 0x050000
-    painter.setRenderHint(QPainter::Qt4CompatiblePainting);
-#endif
 
     // -----------------
     // draw background
@@ -1112,7 +1109,7 @@ void UiAnalogSignal::findIntersect(UiAnalogSignalPrivate* signal, double time,
     if (data != NULL && idx>= 0 && idx+1 < data->size()) {
         sigPart.setLine(idx, data->at(idx),
                         idx+1, data->at(idx+1));
-        sigPart.intersect(QLineF(t, 0, t, 5), intersect);
+        sigPart.intersects(QLineF(t, 0, t, 5), intersect);
 
         // convert x back to absolute time
         intersect->setX(intersect->x()/rate);

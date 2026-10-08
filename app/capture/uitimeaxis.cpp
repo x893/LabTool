@@ -387,7 +387,7 @@ void UiTimeAxis::paintEvent(QPaintEvent *event)
 			QString stepText = getTimeLabelForStep(i / NumberOfMinorSteps);
 
 			// draw text centered over a major step
-			int textWidth = painter.fontMetrics().width(stepText);
+            int textWidth = painter.fontMetrics().horizontalAdvance(stepText);
 			painter.drawText(xpos - textWidth / 2, fontHeight, stepText);
 		}
 

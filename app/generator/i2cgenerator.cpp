@@ -93,7 +93,7 @@ bool I2CGenerator::generateFromString(QString s)
 
 	mTransfer = false;
 
-	QStringList list = s.split(',', QString::SkipEmptyParts);
+    QStringList list = s.split(',', Qt::SkipEmptyParts);
 	for (int i = 0; i < list.size(); i++)
 	{
 		QString tok = list.at(i);

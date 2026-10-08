@@ -59,7 +59,7 @@ public:
 
     explicit AnalogSignal();
     explicit AnalogSignal(AnalogUsage usage, int id = 0);
-    bool operator==(const AnalogSignal &other);
+    bool operator==(const AnalogSignal &other) const;
     bool operator!=(const AnalogSignal &other) {return !(*this == other);}
     AnalogSignal& operator=(const AnalogSignal &other);
     

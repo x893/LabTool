@@ -18,8 +18,8 @@ cursors\4\meta="4;0.006;0"
 cursors\size=4
 
 [timeAxis]
-refTime=9.180000000000001e-05
-majorStepTime=1e-05
+refTime=0.00012700000000000002
+majorStepTime=2e-05
 
 [digitalGenerator]
 enabled=true
@@ -27,5 +27,5 @@ rate=10000
 signals\size=0
 
 [analogGenerator]
-enabled=true
 signals\size=0
+enabled=true

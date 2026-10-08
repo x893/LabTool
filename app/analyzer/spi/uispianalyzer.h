@@ -136,7 +136,7 @@ private:
 	int mMisoSignalId;
 	int mEnableSignalId;
 	int mRate;
-	int mDataBits;
+    unsigned mDataBits;
 	Types::SpiMode mMode;
 	Types::SpiEnable mEnableMode;
 

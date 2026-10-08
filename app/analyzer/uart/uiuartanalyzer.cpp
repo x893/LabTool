@@ -583,8 +583,8 @@ void UiUartAnalyzer::paintEvent(QPaintEvent *event)
 
 		typeAndValueAsString(item.type, item.value, shortTxt, longTxt);
 
-		int shortTextWidth = painter.fontMetrics().width(shortTxt);
-		int longTextWidth = painter.fontMetrics().width(longTxt);
+        int shortTextWidth = painter.fontMetrics().horizontalAdvance(shortTxt);
+        int longTextWidth = painter.fontMetrics().horizontalAdvance(longTxt);
 
 		from = mTimeAxis->timeToPixelRelativeRef((double)fromIdx / sampleRate);
 
@@ -684,19 +684,19 @@ void UiUartAnalyzer::doLayout()
 	int y = r.top();
 
 	QFontMetrics fm(mIdLbl->font());
-	int wIdLbl = fm.width(mIdLbl->text());
+    int wIdLbl = fm.horizontalAdvance(mIdLbl->text());
 	mIdLbl->move(r.left(), y);
 	mIdLbl->resize(wIdLbl, fm.height());
 
 	int x = mIdLbl->pos().x() + wIdLbl + SignalIdMarginRight;
-	int wNameLbl = fm.width(mNameLbl->text());
+    int wNameLbl = fm.horizontalAdvance(mNameLbl->text());
 	mNameLbl->move(x, y);
 	mNameLbl->resize(wNameLbl, fm.height());
 	mEditName->move(x, y);
 	mEditName->resize(mEditName->width(), fm.height());
 
 	mSignalLbl->move(r.left(), r.bottom() - fm.height());
-	mSignalLbl->resize(fm.width(mSignalLbl->text()), fm.height());
+    mSignalLbl->resize(fm.horizontalAdvance(mSignalLbl->text()), fm.height());
 }
 
 void UiUartAnalyzer::changeEvent(QEvent *event)

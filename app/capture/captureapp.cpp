@@ -146,8 +146,13 @@ void CaptureApp::openProject(QSettings &project)
 		binDataFile += Configuration::ProjectBinFileExt;
 	}
 	QFile file(binDataFile);
-	file.open(QIODevice::ReadOnly);
-	QDataStream in(&file);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qWarning() << "Can't open file:" << file.fileName()
+                   << file.errorString();
+        return;
+    }
+    QDataStream in(&file);
 
 	Device *device = DeviceManager::instance().activeDevice();
 	CaptureDevice *captureDevice = device->captureDevice();
@@ -256,8 +261,13 @@ void CaptureApp::saveProject(QSettings &project)
 			binDataFile += Configuration::ProjectBinFileExt;
 		}
 		QFile file(binDataFile);
-		file.open(QIODevice::WriteOnly);
-		QDataStream out(&file);
+        if (!file.open(QIODevice::WriteOnly))
+        {
+            qWarning()  << "Can't open file for write:" << file.fileName()
+                        << file.errorString();
+            return;
+        }
+        QDataStream out(&file);
 
 		project.remove("capture");
 		project.beginGroup("capture");

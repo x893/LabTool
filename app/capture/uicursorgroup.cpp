@@ -106,7 +106,7 @@ void UiCursorGroup::setCursorData(UiCursor::CursorId cursor, bool enabled,
 			else
 			{
 				// infinity character
-				mCursorPairFreq[i / 2].setText(QString(0x221e));
+                mCursorPairFreq[i / 2].setText(QChar(0x221e));
 			}
 		}
 		else

@@ -13,6 +13,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+#include <algorithm>
+
 #include "generatordevice.h"
 
 /*!
@@ -193,7 +195,7 @@ DigitalSignal* GeneratorDevice::addDigitalSignal(int id)
         signal = new DigitalSignal(DigitalSignal::DigitalUsageGenerate, id);
 
         mDigitalSignalList.append(signal);
-        qSort(mDigitalSignalList.begin(), mDigitalSignalList.end(),
+        std::sort(mDigitalSignalList.begin(), mDigitalSignalList.end(),
               digitalSignalLessThan);
 
     } while(false);
@@ -294,7 +296,7 @@ AnalogSignal* GeneratorDevice::addAnalogSignal(int id)
         signal = new AnalogSignal(AnalogSignal::AnalogUsageGenerate, id);
 
         mAnalogSignalList.append(signal);
-        qSort(mAnalogSignalList.begin(), mAnalogSignalList.end(),
+        std::sort(mAnalogSignalList.begin(), mAnalogSignalList.end(),
               analogSignalLessThan);
 
     } while(false);

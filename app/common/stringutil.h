@@ -26,9 +26,9 @@ public:
 	static QString timeInSecToString(double time);
 	static QString frequencyToString(double freq);
 
-	static bool isFrequencyStringValid(QString &freqStr);
+    static bool isFrequencyStringValid(const QString &freqStr);
 	static QString frequencyToString(int freqInHz);
-	static int frequencyToInt(QString &freqStr);
+    static int frequencyToInt(const QString &freqStr);
 
 private:
 	static const QString FrequencyRegExpPattern;

@@ -449,11 +449,11 @@ void UiDigitalSignal::doLayout()
 	QFontMetrics fm(mIdLbl->font());
 
 	mColorLbl->move(r.left(), y);
-	int wColorLbl = fm.width(mColorLbl->text());
+    int wColorLbl = fm.horizontalAdvance(mColorLbl->text());
 	int hColorLbl = fm.height();
 	mColorLbl->resize(wColorLbl, hColorLbl);
 	int x = r.left() + wColorLbl + SignalIdMarginRight;
-	int wIdLbl = fm.width(mIdLbl->text());
+    int wIdLbl = fm.horizontalAdvance(mIdLbl->text());
 	mIdLbl->move(x, y);
 	mIdLbl->resize(wIdLbl, hColorLbl);
 	x += wIdLbl + SignalIdMarginRight;
@@ -462,7 +462,7 @@ void UiDigitalSignal::doLayout()
 
 	x = r.right() - mTrigger->width() /*-5*/;
 	mTrigger->move(x, y);
-	int wNameLbl = fm.width(mNameLbl->text()) + wColorLbl /* Approx margin */;
+    int wNameLbl = fm.horizontalAdvance(mNameLbl->text()) + wColorLbl /* Approx margin */;
 	mNameLbl->resize(wNameLbl, hColorLbl);
 	mEditName->resize(wNameLbl + wColorLbl, hColorLbl + 4);
 	setMinimumHeight(y + hColorLbl + 4);

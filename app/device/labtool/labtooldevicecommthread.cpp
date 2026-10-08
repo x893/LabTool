@@ -17,6 +17,7 @@
 #include <time.h>
 #include <QFile>
 #include <QTime>
+#include <QElapsedTimer>
 #include <stdio.h>
 #include <QCoreApplication>
 #include <QDebug>
@@ -64,7 +65,7 @@ void LabToolDeviceCommThread::run()
 	timeval tv;
 	tv.tv_sec = 1;
 	tv.tv_usec = 0;
-	QTime time;
+    QElapsedTimer time;
 	time.start();
 
 	// Deallocation:
@@ -168,9 +169,16 @@ void LabToolDeviceCommThread::prepareDfuImage()
 		}
 		return;
 	}
-	fIn.open(QFile::ReadOnly);
+    if (!fIn.open(QFile::ReadOnly))
+    {
+        qWarning() << "Can't open file:" << fIn.fileName()
+                   << fIn.errorString();
+        return;
+    }
 	QByteArray arr = fIn.readAll();
 	int size = fIn.size();
+    fIn.close();
+
 	qint16 hashSize = (size + 511) / 512;
 
 	quint8 header[16];
@@ -195,12 +203,16 @@ void LabToolDeviceCommThread::prepareDfuImage()
 
 	fName.append(".qthdr");
 	QFile fOut(fName);
-	fOut.open(QFile::WriteOnly);
+    if (!fOut.open(QFile::WriteOnly))
+    {
+        qWarning() << "Can't open file for write:" << fOut.fileName()
+                   << fOut.errorString();
+        return;
+    }
 	fOut.write((const char *)header, sizeof(header));
 	fOut.write(arr);
 	fOut.flush();
 	fOut.close();
-	fIn.close();
 
 	mPreparedImage = fName;
 }
@@ -222,7 +234,9 @@ void LabToolDeviceCommThread::runDFU()
 	qDebug("DFU program %s", qPrintable(program));
 #else
 #ifdef Q_OS_WIN
-	QString program = "tools/dfu-util-0.7-binaries/win32-mingw32/dfu-util-static.exe";
+    QString program =
+        QCoreApplication::applicationDirPath()
+        + "/tools/dfu-util-0.7-binaries/win32-mingw32/dfu-util-static.exe";
 #else // Q_OS_LINUX
 	QString program;
 	if (QFile::exists("/usr/bin/dfu-util"))
@@ -238,17 +252,26 @@ void LabToolDeviceCommThread::runDFU()
 #endif
 	}
 #endif
-	if (!QFile::exists(program))
-	{
-		program = "../" + program;
-	}
+    if (!QFile::exists(program))
+    {
+        qWarning() << "Cannot find file:" << program;
+        return;
+    }
 #endif
 	// Test that 'program' is executable before executing it to avoid zombie processes, see
 	// https://bugreports.qt-project.org/browse/QTBUG-5990
-	if (!(QFile::permissions(program) & QFile::ExeUser))
+    QFile::Permissions permissions = QFile::permissions(program);
+
+    if (permissions == QFile::Permissions()) {
+        qCritical() << "Cannot access file:" << program;
+        return;
+    }
+
+    if (!(permissions & QFile::ExeUser))
 	{
-		qCritical() << "Please change the permssion on \"" << program << "\" to make it executable";
-		return;
+        qCritical() << "Please change the permssion on \""
+                    << program << "\" to make it executable";
+        return;
 	}
 
 	QStringList arguments;

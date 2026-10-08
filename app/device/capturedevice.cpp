@@ -17,6 +17,7 @@
 
 #include <QDebug>
 #include <QVector>
+#include <algorithm>
 
 /*!
     \class CaptureDevice
@@ -225,7 +226,7 @@ DigitalSignal* CaptureDevice::addDigitalSignal(int id)
         signal->setReconfigureListener(this);
 
         mDigitalSignalList.append(signal);
-        qSort(mDigitalSignalList.begin(), mDigitalSignalList.end(),
+        std::sort(mDigitalSignalList.begin(), mDigitalSignalList.end(),
               digitalSignalLessThan);
 
         // adding a signal might require a reconfiguration
@@ -355,7 +356,7 @@ AnalogSignal* CaptureDevice::addAnalogSignal(int id)
         signal->setReconfigureListener(this);
 
         mAnalogSignalList.append(signal);
-        qSort(mAnalogSignalList.begin(), mAnalogSignalList.end(),
+        std::sort(mAnalogSignalList.begin(), mAnalogSignalList.end(),
               analogSignalLessThan);
 
         // adding a signal might require a reconfiguration
